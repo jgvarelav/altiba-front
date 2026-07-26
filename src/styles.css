@@ -1,2 +1,22 @@
 @import 'tailwindcss';
 @import "primeicons/primeicons.css";
+
+:root {
+  color-scheme: light;
+}
+
+body {
+  background-color: #f9fafb;
+  color: var(--color-altiba-dark);
+}
+
+@theme {
+  --color-altiba-dark: #0f2418;
+  --color-altiba-dark-2: #16311f;
+  --color-altiba-green: #6fa834;
+  --color-altiba-green-dark: #4f7d24;
+  --color-altiba-gold: #d9a441;
+  --color-altiba-forest: #1f3d2b;
+  --color-altiba-cyan: #29abe2;
+  --color-altiba-purple: #7b5ea7;
+}

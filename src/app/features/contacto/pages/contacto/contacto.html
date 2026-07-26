@@ -1,0 +1,46 @@
+<section class="relative overflow-hidden bg-linear-to-br from-altiba-dark to-altiba-dark-2">
+  <div class="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-altiba-green/10 blur-3xl"></div>
+
+  <div class="relative mx-auto max-w-4xl px-4 py-16 text-center sm:px-6 lg:px-8">
+    <p class="text-sm font-semibold uppercase tracking-wide text-altiba-green">Contacto</p>
+    <h1 class="mt-2 text-3xl font-extrabold text-white sm:text-4xl">Hablemos</h1>
+    <p class="mx-auto mt-4 max-w-2xl text-lg text-white/80">
+      ¿Tienes un emprendimiento, una alianza o una idea? Escríbenos, nos encantaría conocerte.
+    </p>
+  </div>
+</section>
+
+<section class="mx-auto max-w-5xl px-4 py-12 sm:px-6 lg:px-8">
+  <div class="grid grid-cols-1 gap-5 sm:grid-cols-3">
+    @for (dato of datos; track dato.label; let i = $index) {
+      <a
+        [href]="dato.href"
+        [appScrollReveal]="i * 90"
+        class="group flex flex-col items-center gap-3 rounded-2xl border border-gray-100 bg-white p-6 text-center shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-altiba-green/30 hover:shadow-lg"
+      >
+        <span
+          class="grid h-14 w-14 place-items-center rounded-full bg-altiba-green/10 text-xl text-altiba-green transition-transform duration-200 group-hover:scale-110"
+        >
+          <fa-icon [icon]="dato.icon" />
+        </span>
+        <p class="font-bold text-altiba-dark">{{ dato.label }}</p>
+        <p class="text-sm text-gray-500">{{ dato.value }}</p>
+      </a>
+    }
+  </div>
+
+  <div [appScrollReveal]="0" class="mt-10 rounded-2xl border border-gray-100 bg-white p-6 text-center shadow-sm sm:p-8">
+    <p class="font-bold text-altiba-dark">Síguenos en redes sociales</p>
+    <div class="mt-4 flex items-center justify-center gap-3">
+      @for (red of redes; track red.label) {
+        <a
+          [href]="red.href"
+          [attr.aria-label]="red.label"
+          class="grid h-11 w-11 place-items-center rounded-full bg-altiba-dark text-white transition-transform duration-200 hover:-translate-y-0.5 hover:bg-altiba-green"
+        >
+          <fa-icon [icon]="red.icon" />
+        </a>
+      }
+    </div>
+  </div>
+</section>

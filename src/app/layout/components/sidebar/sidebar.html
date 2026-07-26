@@ -1,0 +1,91 @@
+<p-drawer
+  [visible]="visible()"
+  (visibleChange)="visible.set($event)"
+  styleClass="!w-72 !bg-altiba-dark"
+  [showCloseIcon]="false"
+>
+  <div class="flex h-full flex-col text-white">
+    <div class="flex items-center justify-between border-b border-white/10 px-5 py-4">
+      <div class="rounded-lg bg-white px-3 py-1.5">
+        <img src="altiba_logo_completo.png" alt="Altiba Conecta Lab" class="h-12 w-auto" />
+      </div>
+      <button
+        type="button"
+        (click)="close()"
+        class="grid h-8 w-8 place-items-center rounded-full text-white/70 hover:bg-white/10 hover:text-white"
+        aria-label="Cerrar menú"
+      >
+        <fa-icon [icon]="faXmark" />
+      </button>
+    </div>
+
+    <nav class="flex-1 overflow-y-auto px-3 py-4">
+      <ul class="flex flex-col gap-1">
+        @for (item of navItems; track item.route) {
+          <li>
+            <a
+              [routerLink]="['/', item.route]"
+              routerLinkActive="bg-altiba-green text-white"
+              [routerLinkActiveOptions]="{ exact: item.route === '' }"
+              (click)="close()"
+              class="flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium text-white/80 transition-colors hover:bg-white/10"
+            >
+              <fa-icon [icon]="item.icon" class="w-4 text-center" />
+              <span>{{ item.label }}</span>
+            </a>
+          </li>
+        }
+        @if (currentUser()) {
+          <li>
+            <a
+              [routerLink]="['/', 'perfil']"
+              routerLinkActive="bg-altiba-green text-white"
+              (click)="close()"
+              class="flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium text-white/80 transition-colors hover:bg-white/10"
+            >
+              <fa-icon [icon]="faUser" class="w-4 text-center" />
+              <span>Mi perfil</span>
+            </a>
+          </li>
+          <li>
+            <button
+              type="button"
+              (click)="logout()"
+              class="flex w-full items-center gap-3 rounded-lg px-4 py-3 text-left text-sm font-medium text-white/80 transition-colors hover:bg-white/10"
+            >
+              <fa-icon [icon]="faRightFromBracket" class="w-4 text-center" />
+              <span>Cerrar sesión</span>
+            </button>
+          </li>
+        } @else {
+          <li>
+            <a
+              [routerLink]="['/', 'login']"
+              (click)="close()"
+              class="flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium text-white/80 transition-colors hover:bg-white/10"
+            >
+              <fa-icon [icon]="faUser" class="w-4 text-center" />
+              <span>Iniciar sesión</span>
+            </a>
+          </li>
+        }
+      </ul>
+    </nav>
+
+    @if (!currentUser()) {
+      <div class="px-4 pb-4">
+        <a [routerLink]="['/', 'registro']" (click)="close()" class="block rounded-xl bg-altiba-green p-4">
+          <p class="font-bold text-white">¡Únete a la red!</p>
+          <p class="mt-1 text-sm text-white/90">Conecta, aprende y transforma tu territorio.</p>
+        </a>
+      </div>
+    }
+
+    <div class="flex items-center gap-4 border-t border-white/10 px-5 py-4 text-white/70">
+      <a href="#" aria-label="Instagram" class="hover:text-white"><fa-icon [icon]="faInstagram" /></a>
+      <a href="#" aria-label="Facebook" class="hover:text-white"><fa-icon [icon]="faFacebookF" /></a>
+      <a href="#" aria-label="Youtube" class="hover:text-white"><fa-icon [icon]="faYoutube" /></a>
+      <a href="#" aria-label="TikTok" class="hover:text-white"><fa-icon [icon]="faTiktok" /></a>
+    </div>
+  </div>
+</p-drawer>

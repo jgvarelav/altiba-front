@@ -1,0 +1,125 @@
+<header
+  class="fixed inset-x-0 top-0 z-40 h-16 border-b bg-white transition-shadow duration-300 lg:h-20"
+  [class.border-gray-100]="!scrolled()"
+  [class.shadow-sm]="!scrolled()"
+  [class.border-transparent]="scrolled()"
+  [class.shadow-lg]="scrolled()"
+>
+  <div class="flex h-full items-center gap-3 px-4 sm:px-6 lg:px-6 xl:px-8">
+    <button
+      type="button"
+      (click)="openSidebar()"
+      class="grid h-10 w-10 shrink-0 place-items-center rounded-lg text-altiba-dark hover:bg-gray-100 lg:hidden"
+      aria-label="Abrir menú"
+    >
+      <fa-icon [icon]="faBars" size="lg" />
+    </button>
+
+    <a [routerLink]="['/']" class="flex shrink-0 items-center">
+      <img src="altiba_logo_completo.png" alt="Altiba Conecta Lab" class="h-12 w-auto lg:h-14" />
+    </a>
+
+    <nav class="hidden min-w-0 flex-1 items-center gap-0.5 overflow-x-auto lg:flex">
+      @for (item of navItems; track item.route) {
+        <a
+          [routerLink]="['/', item.route]"
+          routerLinkActive="bg-altiba-green/10 text-altiba-green"
+          [routerLinkActiveOptions]="{ exact: item.route === '' }"
+          [title]="item.label"
+          class="flex shrink-0 items-center gap-1.5 rounded-full px-2 py-2 text-xs font-medium text-altiba-dark/80 transition-colors hover:bg-gray-100 2xl:text-sm"
+        >
+          <fa-icon [icon]="item.icon" class="text-xs" />
+          <span>{{ item.label }}</span>
+        </a>
+      }
+    </nav>
+
+    <div class="ml-auto flex shrink-0 items-center gap-1 sm:gap-2">
+      <label class="relative hidden 2xl:block">
+        <fa-icon
+          [icon]="faMagnifyingGlass"
+          class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+        />
+        <input
+          type="search"
+          placeholder="Buscar emprendimientos, productos, cursos..."
+          class="w-56 rounded-full border border-gray-200 bg-gray-50 py-2 pl-9 pr-3 text-sm text-altiba-dark placeholder:text-gray-400 focus:border-altiba-green focus:outline-none"
+        />
+      </label>
+      <button
+        type="button"
+        class="grid h-10 w-10 place-items-center rounded-full text-altiba-dark hover:bg-gray-100 2xl:hidden"
+        aria-label="Buscar"
+      >
+        <fa-icon [icon]="faMagnifyingGlass" />
+      </button>
+
+      <button
+        type="button"
+        class="grid h-10 w-10 place-items-center rounded-full text-altiba-dark hover:bg-gray-100"
+        aria-label="Notificaciones"
+      >
+        <fa-icon [icon]="faBell" />
+      </button>
+      <button
+        type="button"
+        class="hidden h-10 w-10 place-items-center rounded-full text-altiba-dark hover:bg-gray-100 sm:grid"
+        aria-label="Mensajes"
+      >
+        <fa-icon [icon]="faEnvelope" />
+      </button>
+
+      @if (currentUser(); as user) {
+        <div class="relative" (appClickOutside)="closeProfileMenu()">
+          <button
+            type="button"
+            (click)="toggleProfileMenu()"
+            class="flex items-center gap-2 rounded-full py-1 pl-1 pr-2 hover:bg-gray-100"
+          >
+            <span class="grid h-8 w-8 place-items-center rounded-full bg-altiba-green text-sm font-bold text-white">
+              {{ user.username[0] }}
+            </span>
+            <span class="hidden text-sm font-medium text-altiba-dark 2xl:block">{{ user.username }}</span>
+            <fa-icon [icon]="faChevronDown" class="hidden text-xs text-altiba-dark/60 2xl:block" />
+          </button>
+
+          @if (isProfileMenuOpen()) {
+            <div class="absolute right-0 z-50 mt-2 w-52 rounded-xl border border-gray-100 bg-white py-2 shadow-lg">
+              <a
+                [routerLink]="['/', 'perfil']"
+                (click)="closeProfileMenu()"
+                class="flex items-center gap-2 px-4 py-2 text-sm text-altiba-dark hover:bg-gray-50"
+              >
+                <fa-icon [icon]="faUser" /> Mi perfil
+              </a>
+              <button
+                type="button"
+                (click)="logout()"
+                class="flex w-full items-center gap-2 px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50"
+              >
+                <fa-icon [icon]="faRightFromBracket" /> Cerrar sesión
+              </button>
+            </div>
+          }
+        </div>
+      } @else {
+        <div class="flex items-center gap-1 sm:gap-2">
+          <a
+            [routerLink]="['/', 'login']"
+            class="rounded-full px-3 py-2 text-sm font-medium text-altiba-dark hover:bg-gray-100"
+          >
+            Iniciar sesión
+          </a>
+          <a
+            [routerLink]="['/', 'registro']"
+            class="rounded-full bg-altiba-green px-3 py-2 text-sm font-semibold text-white hover:bg-altiba-green-dark"
+          >
+            Registrarme
+          </a>
+        </div>
+      }
+    </div>
+  </div>
+</header>
+
+<app-sidebar />

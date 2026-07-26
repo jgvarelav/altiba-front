@@ -1,1 +1,239 @@
-<p>home works!</p>
+<section class="relative overflow-hidden bg-linear-to-br from-altiba-dark to-altiba-dark-2">
+  <div class="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-altiba-green/10 blur-3xl"></div>
+  <div class="pointer-events-none absolute -bottom-24 left-1/3 h-72 w-72 rounded-full bg-altiba-cyan/10 blur-3xl"></div>
+
+  <div class="relative mx-auto grid max-w-7xl gap-8 px-4 py-12 sm:px-6 lg:grid-cols-3 lg:px-8 lg:py-16">
+    <div class="lg:col-span-2">
+      <p class="text-4xl font-extrabold leading-tight text-white sm:text-5xl">ALTIBA</p>
+      <p class="text-3xl font-extrabold leading-tight text-altiba-green sm:text-4xl">CONECTA LAB</p>
+      <p class="mt-4 max-w-xl text-lg text-white/80">
+        Conectamos personas, ideas y oportunidades para el desarrollo rural e innovador.
+      </p>
+      <div class="mt-6 flex flex-wrap gap-3">
+        <a
+          [routerLink]="['/', 'emprendimientos']"
+          class="rounded-full bg-altiba-green px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-altiba-green/20 transition-transform hover:-translate-y-0.5 hover:bg-altiba-green-dark active:scale-95"
+        >
+          Explorar emprendimientos
+        </a>
+        <a
+          [routerLink]="['/', 'comunidad']"
+          class="rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-altiba-dark shadow-lg shadow-black/10 transition-transform hover:-translate-y-0.5 hover:bg-white/90 active:scale-95"
+        >
+          Conocer más
+        </a>
+      </div>
+    </div>
+
+    <div class="rounded-2xl bg-white/5 p-6 backdrop-blur-sm ring-1 ring-white/10">
+      <ul class="flex flex-col gap-5">
+        <li class="group flex items-start gap-3">
+          <span class="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-white/10 text-altiba-green transition-transform group-hover:scale-110 group-hover:bg-altiba-green/20">
+            <fa-icon [icon]="faUserGroup" />
+          </span>
+          <p class="text-sm text-white">
+            <span class="block font-bold">Conecta</span>
+            con emprendedores y aliados
+          </p>
+        </li>
+        <li class="group flex items-start gap-3">
+          <span class="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-white/10 text-altiba-green transition-transform group-hover:scale-110 group-hover:bg-altiba-green/20">
+            <fa-icon [icon]="faGraduationCap" />
+          </span>
+          <p class="text-sm text-white">
+            <span class="block font-bold">Aprende</span>
+            con la comunidad Altiba
+          </p>
+        </li>
+        <li class="group flex items-start gap-3">
+          <span class="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-white/10 text-altiba-green transition-transform group-hover:scale-110 group-hover:bg-altiba-green/20">
+            <fa-icon [icon]="faRocket" />
+          </span>
+          <p class="text-sm text-white">
+            <span class="block font-bold">Impulsa</span>
+            tu emprendimiento e ideas
+          </p>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section [appScrollReveal]="0" class="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+  <div class="flex items-center justify-between">
+    <h2 class="text-lg font-bold text-altiba-dark">Categorías destacadas</h2>
+    <a
+      [routerLink]="['/', 'emprendimientos', 'categorias']"
+      class="text-sm font-medium text-altiba-green hover:underline"
+    >
+      Ver todas
+    </a>
+  </div>
+
+  <div class="mt-6 grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-5">
+    @for (categoria of categorias(); track categoria.slug; let i = $index) {
+      <a
+        [routerLink]="['/', 'emprendimientos']"
+        [queryParams]="{ categoria: categoria.slug }"
+        [appScrollReveal]="i * 60"
+        class="group flex flex-col items-center gap-2 text-center"
+      >
+        <span
+          class="grid h-14 w-14 place-items-center rounded-full text-lg text-white shadow-md transition-transform duration-200 group-hover:-translate-y-1 group-hover:shadow-lg"
+          [style.background-color]="categoria.color"
+        >
+          <fa-icon [icon]="categoriaIcon(categoria.icono)" />
+        </span>
+        <p class="text-sm font-medium text-altiba-dark transition-colors group-hover:text-altiba-green">
+          {{ categoria.nombre }}
+        </p>
+      </a>
+    }
+  </div>
+</section>
+
+<section [appScrollReveal]="0" class="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+  <div class="flex items-center justify-between">
+    <h2 class="text-lg font-bold text-altiba-dark">Emprendimientos destacados</h2>
+    <a [routerLink]="['/', 'emprendimientos']" class="text-sm font-medium text-altiba-green hover:underline">
+      Ver todos
+    </a>
+  </div>
+
+  @if (featuredProductos().length > 0) {
+    <div class="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      @for (producto of featuredProductos(); track producto.documentId; let i = $index) {
+        <div
+          [appScrollReveal]="i * 80"
+          class="group overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-altiba-green/30 hover:shadow-lg"
+        >
+          <div class="relative grid h-36 place-items-center overflow-hidden bg-gray-100 text-3xl text-gray-300">
+            @if (firstImageUrl(producto); as imageUrl) {
+              <img
+                [src]="imageUrl"
+                [alt]="producto.nombre"
+                class="absolute inset-0 h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+              />
+            } @else {
+              <fa-icon [icon]="faImage" />
+            }
+          </div>
+          <div class="p-4">
+            <p class="font-bold text-altiba-dark transition-colors group-hover:text-altiba-green">{{ producto.nombre }}</p>
+            <p class="text-sm text-gray-500">{{ categoriaLabel(producto.categoria) }}</p>
+            @if (producto.ubicacion) {
+              <p class="mt-2 flex items-center gap-1 text-xs text-gray-400">
+                <fa-icon [icon]="faLocationDot" />
+                {{ producto.ubicacion }}
+              </p>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  } @else {
+    <p class="mt-6 text-gray-500">Muy pronto destacaremos aquí los mejores emprendimientos.</p>
+  }
+</section>
+
+<section class="mx-auto grid max-w-7xl grid-cols-1 gap-6 px-4 py-10 sm:px-6 lg:grid-cols-4 lg:px-8">
+  <div [appScrollReveal]="0" class="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm transition-shadow hover:shadow-md lg:col-span-1">
+    <div class="flex items-center justify-between">
+      <h2 class="font-bold text-altiba-dark">Próximos eventos</h2>
+      <a [routerLink]="['/', 'eventos']" class="text-sm font-medium text-altiba-green hover:underline">Ver todos</a>
+    </div>
+    <ul class="mt-4 flex flex-col gap-4">
+      @if (proximosEventos().length === 0) {
+        <p class="text-sm text-gray-400">No hay eventos programados por ahora.</p>
+      }
+      @for (evento of proximosEventos(); track evento.documentId) {
+        <li
+          (click)="openEvento(evento)"
+          class="group flex cursor-pointer items-start gap-3 rounded-lg p-1.5 transition-colors hover:bg-altiba-green/5"
+        >
+          <div class="grid h-12 w-12 shrink-0 place-items-center rounded-lg bg-altiba-green/10 text-center leading-none transition-transform group-hover:scale-105">
+            <span class="block text-sm font-bold text-altiba-green">{{ eventoDiaMes(evento.fecha).day }}</span>
+            <span class="block text-[10px] font-semibold text-altiba-green/80">{{ eventoDiaMes(evento.fecha).month }}</span>
+          </div>
+          <div>
+            <p class="text-sm font-semibold text-altiba-dark transition-colors group-hover:text-altiba-green">
+              {{ evento.titulo }}
+            </p>
+            <p class="text-xs text-gray-500">
+              {{ evento.ubicacion ?? 'Virtual' }} • {{ eventoHora(evento.fecha) }}
+            </p>
+          </div>
+        </li>
+      }
+    </ul>
+  </div>
+
+  <div
+    [appScrollReveal]="80"
+    class="relative flex flex-col justify-center overflow-hidden rounded-2xl bg-linear-to-br from-altiba-dark-2 to-altiba-dark p-6 lg:col-span-2"
+  >
+    <div class="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-altiba-green/10 blur-2xl"></div>
+    <h2 class="text-xl font-bold text-white">¿Eres emprendedor?</h2>
+    <p class="mt-2 max-w-md text-sm text-white/80">
+      Publica tus productos, conecta con aliados y haz crecer tu negocio.
+    </p>
+    <a
+      [routerLink]="['/', 'perfil']"
+      class="relative mt-4 w-fit rounded-full bg-altiba-green px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-altiba-green/20 transition-transform hover:-translate-y-0.5 hover:bg-altiba-green-dark active:scale-95"
+    >
+      Regístrate ahora
+    </a>
+  </div>
+
+  <div
+    [appScrollReveal]="160"
+    class="flex flex-col rounded-2xl border border-gray-100 bg-white p-5 shadow-sm transition-shadow hover:shadow-md lg:col-span-1"
+  >
+    <div class="flex items-center gap-2">
+      <span class="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-altiba-green/10 text-altiba-green">
+        <fa-icon [icon]="faCircleInfo" />
+      </span>
+      <h2 class="font-bold text-altiba-dark">¿Quiénes somos?</h2>
+    </div>
+    <p class="mt-3 flex-1 text-sm text-gray-500">
+      Conectamos emprendimientos innovadores con consumidores mediante contenido audiovisual y tecnología.
+    </p>
+    <a
+      [routerLink]="['/', 'sobre-nosotros']"
+      class="mt-4 text-sm font-medium text-altiba-green hover:underline"
+    >
+      Conocer más
+    </a>
+  </div>
+</section>
+
+<section [appScrollReveal]="0" class="bg-altiba-green/10">
+  <div class="mx-auto grid max-w-7xl grid-cols-1 gap-6 px-4 py-8 sm:grid-cols-2 sm:px-6 lg:grid-cols-4 lg:px-8">
+    <div class="flex items-center gap-3 text-altiba-dark">
+      <fa-icon [icon]="faUserGroup" class="text-2xl text-altiba-green" />
+      <p class="text-sm">
+        <span class="block text-lg font-bold">Más de 200</span>
+        emprendimientos conectados
+      </p>
+    </div>
+    <div class="flex items-center gap-3 text-altiba-dark">
+      <fa-icon [icon]="faUsers" class="text-2xl text-altiba-green" />
+      <p class="text-sm">
+        <span class="block font-bold">Alianzas que</span>
+        transforman nuestro territorio
+      </p>
+    </div>
+    <div class="flex items-center gap-3 text-altiba-dark">
+      <fa-icon [icon]="faLightbulb" class="text-2xl text-altiba-green" />
+      <p class="text-sm">
+        <span class="block font-bold">Innovación y tecnología</span>
+        para el desarrollo rural sostenible
+      </p>
+    </div>
+    <div class="grid place-items-center rounded-xl bg-altiba-dark p-4 text-center">
+      <p class="text-sm font-semibold italic text-white">
+        "Conectamos talento rural con oportunidades reales."
+      </p>
+    </div>
+  </div>
+</section>

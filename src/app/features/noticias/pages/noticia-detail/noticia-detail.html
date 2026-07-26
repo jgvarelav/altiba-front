@@ -1,0 +1,30 @@
+<div class="mx-auto max-w-3xl px-4 py-10 sm:px-6">
+  <a
+    [routerLink]="['/', 'noticias']"
+    class="flex w-fit items-center gap-2 text-sm font-medium text-gray-500 transition-colors hover:text-altiba-green"
+  >
+    <fa-icon [icon]="faArrowLeft" /> Volver a noticias
+  </a>
+
+  @if (loading()) {
+    <p class="mt-6 text-gray-500">Cargando...</p>
+  } @else if (errorMessage()) {
+    <p class="mt-6 text-red-600">{{ errorMessage() }}</p>
+  } @else if (noticia(); as post) {
+    <article class="mt-4">
+      @if (imagenUrl(post); as imageUrl) {
+        <div class="relative h-64 w-full overflow-hidden rounded-2xl bg-gray-100 sm:h-80">
+          <img [src]="imageUrl" [alt]="post.titulo" class="absolute inset-0 h-full w-full object-cover" />
+        </div>
+      } @else {
+        <div class="grid h-64 w-full place-items-center rounded-2xl bg-gray-100 text-4xl text-gray-300 sm:h-80">
+          <fa-icon [icon]="faNewspaper" />
+        </div>
+      }
+
+      <p class="mt-5 text-sm font-medium text-gray-400">{{ fechaLarga(post.fecha) }}</p>
+      <h1 class="mt-1 text-2xl font-bold text-altiba-dark sm:text-3xl">{{ post.titulo }}</h1>
+      <p class="mt-4 whitespace-pre-line text-altiba-dark/90">{{ post.descripcion }}</p>
+    </article>
+  }
+</div>
