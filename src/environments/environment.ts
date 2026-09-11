@@ -1,4 +1,4 @@
 export const environment = {
   production: false,
-  apiUrl: 'https://wishlist-cruise-treatment-blogging.trycloudflare.com',
+  apiUrl: 'https://mic-little-stroke-receipt.trycloudflare.com',
 };
