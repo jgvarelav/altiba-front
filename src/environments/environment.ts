@@ -1,4 +1,4 @@
 export const environment = {
   production: false,
-  apiUrl: 'https://mic-little-stroke-receipt.trycloudflare.com',
+  apiUrl: 'http://localhost:1337',
 };
