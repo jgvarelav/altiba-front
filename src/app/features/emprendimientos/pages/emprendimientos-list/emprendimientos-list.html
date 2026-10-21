@@ -1,4 +1,4 @@
-<section class="relative overflow-hidden bg-linear-to-br from-altiba-dark to-altiba-dark-2">
+<section class="relative overflow-hidden bg-altiba-banner">
   <div class="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-altiba-green/10 blur-3xl"></div>
 
   <div class="relative mx-auto flex max-w-7xl flex-col items-start gap-4 px-4 py-12 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8">
@@ -45,6 +45,9 @@
       @for (producto of productos(); track producto.documentId; let i = $index) {
         <div
           (click)="openDetail(producto)"
+          (keydown.enter)="openDetail(producto)"
+          tabindex="0"
+          role="link"
           [appScrollReveal]="(i % 4) * 80"
           class="group cursor-pointer overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-altiba-green/30 hover:shadow-lg"
         >

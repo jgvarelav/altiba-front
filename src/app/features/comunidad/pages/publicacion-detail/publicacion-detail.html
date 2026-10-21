@@ -17,18 +17,28 @@
           <h1 class="text-2xl font-bold text-altiba-dark">{{ post.titulo }}</h1>
           <p class="mt-1 text-sm text-gray-500">
             Publicado por
-            <span class="font-medium text-altiba-dark">{{ post.owner?.username ?? 'Usuario' }}</span>
+            <span class="font-medium text-altiba-dark">{{
+              post.owner?.username ?? 'Usuario'
+            }}</span>
             · {{ post.createdAt | date: 'd MMM yyyy, h:mm a' }}
           </p>
         </div>
         @if (isOwnerOfPost()) {
-          <button
-            type="button"
-            (click)="removePublicacion()"
-            class="flex shrink-0 items-center gap-1 rounded-full border border-red-100 px-3 py-1.5 text-xs font-medium text-red-600 transition-colors hover:bg-red-50"
-          >
-            <fa-icon [icon]="faTrash" /> Eliminar
-          </button>
+          <div class="flex shrink-0 gap-2">
+            <a
+              [routerLink]="['/', 'comunidad', post.documentId, 'editar']"
+              class="flex items-center gap-1 rounded-full border border-gray-200 px-3 py-1.5 text-xs font-medium text-altiba-dark transition-colors hover:bg-gray-50"
+            >
+              <fa-icon [icon]="faPen" /> Editar
+            </a>
+            <button
+              type="button"
+              (click)="removePublicacion()"
+              class="flex shrink-0 items-center gap-1 rounded-full border border-red-100 px-3 py-1.5 text-xs font-medium text-red-600 transition-colors hover:bg-red-50"
+            >
+              <fa-icon [icon]="faTrash" /> Eliminar
+            </button>
+          </div>
         }
       </div>
       <p class="mt-4 whitespace-pre-line text-altiba-dark/90">{{ post.contenido }}</p>
@@ -58,7 +68,9 @@
         </div>
       } @else {
         <p class="mt-4 text-sm text-gray-500">
-          <a [routerLink]="['/', 'login']" class="font-medium text-altiba-green hover:underline">Inicia sesión</a>
+          <a [routerLink]="['/', 'login']" class="font-medium text-altiba-green hover:underline"
+            >Inicia sesión</a
+          >
           para participar en la conversación.
         </p>
       }

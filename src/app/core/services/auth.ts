@@ -35,6 +35,24 @@ export class AuthService {
       .pipe(tap((response) => this.storeSession(response)));
   }
 
+  /** Strapi always answers OK (even for unknown emails) so accounts can't be enumerated. */
+  forgotPassword(email: string): Observable<{ ok: boolean }> {
+    return this.http.post<{ ok: boolean }>(`${environment.apiUrl}/api/auth/forgot-password`, {
+      email,
+    });
+  }
+
+  /** `code` comes from the link in the reset email; on success the user is logged in. */
+  resetPassword(code: string, password: string): Observable<AuthResponse> {
+    return this.http
+      .post<AuthResponse>(`${environment.apiUrl}/api/auth/reset-password`, {
+        code,
+        password,
+        passwordConfirmation: password,
+      })
+      .pipe(tap((response) => this.storeSession(response)));
+  }
+
   logout(): void {
     localStorage.removeItem(JWT_KEY);
     localStorage.removeItem(USER_KEY);

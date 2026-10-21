@@ -1,0 +1,55 @@
+/* PrimeNG renders the inline calendar outside this component's view encapsulation,
+   so its internals are styled through ::ng-deep, scoped under .eventos-calendar. */
+:host ::ng-deep .eventos-calendar .p-datepicker,
+:host ::ng-deep .eventos-calendar .p-datepicker-panel {
+  width: 100%;
+  border: none;
+  box-shadow: none;
+}
+
+:host ::ng-deep .eventos-calendar .p-datepicker-select-month,
+:host ::ng-deep .eventos-calendar .p-datepicker-select-year {
+  text-transform: capitalize;
+  font-weight: 700;
+  color: var(--color-altiba-dark);
+}
+
+:host ::ng-deep .eventos-calendar .p-datepicker-day {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+:host ::ng-deep .eventos-calendar .p-datepicker-day-selected {
+  background: var(--color-altiba-green);
+  color: #fff;
+}
+
+:host ::ng-deep .eventos-calendar .p-datepicker-today > .p-datepicker-day:not(.p-datepicker-day-selected) {
+  background: color-mix(in srgb, var(--color-altiba-gold) 20%, transparent);
+  color: var(--color-altiba-dark);
+}
+
+.evento-day {
+  position: relative;
+  font-weight: 700;
+  color: var(--color-altiba-green-dark);
+}
+
+.evento-dot {
+  position: absolute;
+  bottom: -0.45rem;
+  left: 50%;
+  height: 0.35rem;
+  width: 0.35rem;
+  transform: translateX(-50%);
+  border-radius: 9999px;
+  background: var(--color-altiba-green);
+}
+
+:host ::ng-deep .eventos-calendar .p-datepicker-day-selected .evento-day {
+  color: #fff;
+}
+
+:host ::ng-deep .eventos-calendar .p-datepicker-day-selected .evento-dot {
+  background: #fff;
+}

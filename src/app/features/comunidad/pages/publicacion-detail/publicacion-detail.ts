@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
-import { faArrowLeft, faTrash, faComments } from '@fortawesome/free-solid-svg-icons';
+import { faArrowLeft, faPen, faTrash, faComments } from '@fortawesome/free-solid-svg-icons';
 import { PublicacionApi } from '../../services/publicacion-api';
 import { ComentarioApi } from '../../services/comentario-api';
 import { AuthService } from '../../../../core/services/auth';
@@ -34,6 +34,7 @@ export class PublicacionDetail {
   readonly tree = computed(() => buildComentarioTree(this.comentarios()));
 
   readonly faArrowLeft = faArrowLeft;
+  readonly faPen = faPen;
   readonly faTrash = faTrash;
   readonly faComments = faComments;
 

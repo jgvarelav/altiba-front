@@ -7,5 +7,6 @@ import { PublicacionDetail } from './pages/publicacion-detail/publicacion-detail
 export const COMUNIDAD_ROUTES: Routes = [
   { path: '', component: ComunidadList },
   { path: 'crear', component: PublicacionForm, canActivate: [authGuard] },
+  { path: ':documentId/editar', component: PublicacionForm, canActivate: [authGuard] },
   { path: ':documentId', component: PublicacionDetail },
 ];
