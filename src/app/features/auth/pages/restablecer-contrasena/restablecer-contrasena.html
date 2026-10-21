@@ -1,0 +1,66 @@
+<div class="mx-auto flex max-w-md flex-col px-4 py-16 sm:px-6">
+  <h1 class="text-2xl font-bold text-altiba-dark">Nueva contraseña</h1>
+
+  @if (!code()) {
+    <p class="mt-4 text-sm text-red-600">
+      Este enlace está incompleto. Abre el enlace exactamente como llegó a tu correo, o solicita uno
+      nuevo.
+    </p>
+    <a
+      [routerLink]="['/', 'olvide-contrasena']"
+      class="mt-4 w-fit font-medium text-altiba-green hover:underline"
+      >Solicitar un nuevo enlace</a
+    >
+  } @else {
+    <p class="mt-1 text-sm text-gray-500">Elige una contraseña nueva para tu cuenta.</p>
+
+    <form [formGroup]="form" (ngSubmit)="submit()" class="mt-6 flex flex-col gap-4">
+      <div>
+        <label for="password" class="mb-1 block text-sm font-medium text-altiba-dark"
+          >Nueva contraseña</label
+        >
+        <input
+          id="password"
+          type="password"
+          formControlName="password"
+          autocomplete="new-password"
+          class="w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-altiba-dark focus:border-altiba-green focus:outline-none"
+        />
+        @if (form.controls.password.touched && form.controls.password.invalid) {
+          <p class="mt-1 text-xs text-red-600">Debe tener al menos 6 caracteres.</p>
+        }
+      </div>
+
+      <div>
+        <label for="confirmacion" class="mb-1 block text-sm font-medium text-altiba-dark"
+          >Confirma la contraseña</label
+        >
+        <input
+          id="confirmacion"
+          type="password"
+          formControlName="confirmacion"
+          autocomplete="new-password"
+          class="w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-altiba-dark focus:border-altiba-green focus:outline-none"
+        />
+        @if (form.controls.confirmacion.touched && form.hasError('mismatch')) {
+          <p class="mt-1 text-xs text-red-600">Las contraseñas no coinciden.</p>
+        }
+      </div>
+
+      @if (errorMessage()) {
+        <p class="text-sm text-red-600">
+          {{ errorMessage() }}
+          <a [routerLink]="['/', 'olvide-contrasena']" class="font-medium underline">Solicitar enlace</a>
+        </p>
+      }
+
+      <button
+        type="submit"
+        [disabled]="loading()"
+        class="mt-2 rounded-full bg-altiba-green px-5 py-2.5 text-sm font-semibold text-white hover:bg-altiba-green-dark disabled:opacity-60"
+      >
+        {{ loading() ? 'Guardando...' : 'Guardar contraseña' }}
+      </button>
+    </form>
+  }
+</div>

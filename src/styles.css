@@ -20,3 +20,18 @@ body {
   --color-altiba-cyan: #29abe2;
   --color-altiba-purple: #7b5ea7;
 }
+
+/* Hero/banner background shared by every page header: a sober diagonal from
+   near-black green to a muted, desaturated forest/slate tone, with one faint
+   glow for depth. The darkest stop sits behind the text side (top-left) to keep
+   white text legible. */
+@utility bg-altiba-banner {
+  background-color: var(--color-altiba-dark);
+  background-image:
+    radial-gradient(
+      circle at 90% 10%,
+      color-mix(in srgb, var(--color-altiba-green) 10%, transparent),
+      transparent 50%
+    ),
+    linear-gradient(135deg, #08140d 0%, var(--color-altiba-dark) 35%, #24392f 75%, #33463f 100%);
+}

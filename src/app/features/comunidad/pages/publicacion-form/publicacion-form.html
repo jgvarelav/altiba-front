@@ -1,6 +1,14 @@
 <div class="mx-auto max-w-2xl px-4 py-10 sm:px-6">
-  <h1 class="text-2xl font-bold text-altiba-dark">Nueva publicación</h1>
-  <p class="mt-1 text-sm text-gray-500">Comparte una idea, pregunta o novedad con la comunidad.</p>
+  <h1 class="text-2xl font-bold text-altiba-dark">
+    {{ isEdit() ? 'Editar publicación' : 'Nueva publicación' }}
+  </h1>
+  <p class="mt-1 text-sm text-gray-500">
+    {{
+      isEdit()
+        ? 'Corrige o actualiza tu mensaje.'
+        : 'Comparte una idea, pregunta o novedad con la comunidad.'
+    }}
+  </p>
 
   <form [formGroup]="form" (ngSubmit)="submit()" class="mt-6 flex flex-col gap-4">
     <div>
@@ -27,12 +35,26 @@
       <p class="text-sm text-red-600">{{ errorMessage() }}</p>
     }
 
-    <button
-      type="submit"
-      [disabled]="loading()"
-      class="mt-2 w-fit rounded-full bg-altiba-green px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-altiba-green/20 transition-transform hover:bg-altiba-green-dark hover:-translate-y-0.5 active:scale-95 disabled:opacity-60"
-    >
-      {{ loading() ? 'Publicando...' : 'Publicar' }}
-    </button>
+    <div class="mt-2 flex items-center gap-3">
+      <button
+        type="submit"
+        [disabled]="loading()"
+        class="w-fit rounded-full bg-altiba-green px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-altiba-green/20 transition-transform hover:bg-altiba-green-dark hover:-translate-y-0.5 active:scale-95 disabled:opacity-60"
+      >
+        @if (isEdit()) {
+          {{ loading() ? 'Guardando...' : 'Guardar cambios' }}
+        } @else {
+          {{ loading() ? 'Publicando...' : 'Publicar' }}
+        }
+      </button>
+      @if (documentId(); as id) {
+        <a
+          [routerLink]="['/', 'comunidad', id]"
+          class="text-sm font-medium text-gray-500 hover:text-altiba-dark"
+        >
+          Cancelar
+        </a>
+      }
+    </div>
   </form>
 </div>

@@ -36,6 +36,27 @@ export function eventoHora(fecha: string): string {
   return date.toLocaleTimeString('es-CO', { hour: 'numeric', minute: '2-digit' });
 }
 
+/** "12 de octubre" — used as the heading of a calendar day's popup. */
+export function eventoFechaDia(fecha: string): string {
+  const date = new Date(fecha);
+  return `${date.getDate()} de ${MESES[date.getMonth()]}`;
+}
+
+/** "octubre 2026" — heading for the month shown in the calendar. */
+export function mesAnio(month: number, year: number): string {
+  return `${MESES[month]} ${year}`;
+}
+
+/** Local-time key for grouping events by calendar day (month is 0-based). */
+export function diaKey(year: number, month: number, day: number): string {
+  return `${year}-${month}-${day}`;
+}
+
+export function eventoDiaKey(fecha: string): string {
+  const date = new Date(fecha);
+  return diaKey(date.getFullYear(), date.getMonth(), date.getDate());
+}
+
 export function eventoFechaLarga(fecha: string): string {
   const date = new Date(fecha);
   const diaSemana = DIAS_SEMANA[date.getDay()];

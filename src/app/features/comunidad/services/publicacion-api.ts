@@ -43,6 +43,12 @@ export class PublicacionApi {
       .pipe(map((res) => res.data));
   }
 
+  update(documentId: string, input: PublicacionInput): Observable<Publicacion> {
+    return this.http
+      .put<StrapiItemResponse<Publicacion>>(`${this.baseUrl}/${documentId}`, { data: input })
+      .pipe(map((res) => res.data));
+  }
+
   remove(documentId: string): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/${documentId}`);
   }
