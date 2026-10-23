@@ -17,7 +17,7 @@
         type="text"
         formControlName="titulo"
         placeholder="¿De qué quieres hablar?"
-        class="w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-altiba-dark transition-colors focus:border-altiba-green focus:outline-none"
+        class="w-full rounded-lg form-field px-3 py-2 text-sm text-altiba-dark"
       />
     </div>
 
@@ -27,7 +27,7 @@
         formControlName="contenido"
         rows="6"
         placeholder="Escribe los detalles..."
-        class="w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-altiba-dark transition-colors focus:border-altiba-green focus:outline-none"
+        class="w-full rounded-lg form-field px-3 py-2 text-sm text-altiba-dark"
       ></textarea>
     </div>
 
@@ -39,7 +39,7 @@
       <button
         type="submit"
         [disabled]="loading()"
-        class="w-fit rounded-full bg-altiba-green px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-altiba-green/20 transition-transform hover:bg-altiba-green-dark hover:-translate-y-0.5 active:scale-95 disabled:opacity-60"
+        class="w-fit rounded-full btn-primary px-5 py-2.5 text-sm font-semibold text-white active:scale-95"
       >
         @if (isEdit()) {
           {{ loading() ? 'Guardando...' : 'Guardar cambios' }}

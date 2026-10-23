@@ -1,0 +1,99 @@
+<article
+  class="group card card-hover flex h-full flex-col overflow-hidden rounded-3xl"
+  [style.--categoria-color]="categoria().color"
+>
+  <a
+    [routerLink]="['/', 'emprendimientos', producto().documentId]"
+    class="flex flex-1 flex-col focus-visible:outline-none"
+  >
+    <div class="relative h-48 overflow-hidden">
+      @if (imageUrl(); as url) {
+        <img
+          [src]="url"
+          [alt]="producto().nombre"
+          loading="lazy"
+          class="absolute inset-0 h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-110"
+        />
+      } @else {
+        <!-- No photo: a tinted panel with the category icon instead of a gray box. -->
+        <div
+          class="absolute inset-0 grid place-items-center text-5xl text-white/80"
+          [style.background]="
+            'linear-gradient(135deg, ' +
+            categoria().color +
+            ', color-mix(in srgb, ' +
+            categoria().color +
+            ' 55%, black))'
+          "
+        >
+          <fa-icon [icon]="categoria().icon" />
+        </div>
+      }
+      <div
+        class="pointer-events-none absolute inset-0 bg-linear-to-t from-black/60 via-black/0 to-black/20"
+      ></div>
+
+      <span
+        class="absolute left-3 top-3 flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-semibold text-white shadow-md ring-1 ring-white/30"
+        [style.background-color]="categoria().color"
+      >
+        <fa-icon [icon]="categoria().icon" />
+        {{ categoria().nombre }}
+      </span>
+
+      @if (producto().destacado) {
+        <span
+          class="absolute right-3 top-3 grid h-8 w-8 place-items-center rounded-full bg-altiba-gold text-sm text-white shadow-md ring-2 ring-white/70"
+          title="Destacado"
+        >
+          <fa-icon [icon]="faStar" />
+        </span>
+      }
+
+      <span
+        class="absolute bottom-3 left-3 rounded-full bg-white/95 px-3 py-1 text-sm font-extrabold text-altiba-dark shadow-lg backdrop-blur-sm"
+      >
+        {{ precio() }}
+      </span>
+    </div>
+
+    <div class="flex flex-1 flex-col p-4">
+      <p
+        class="line-clamp-2 font-bold leading-snug text-altiba-dark transition-colors group-hover:text-altiba-green"
+      >
+        {{ producto().nombre }}
+      </p>
+      @if (producto().ubicacion) {
+        <p class="mt-1.5 flex items-center gap-1.5 text-xs text-gray-500">
+          <fa-icon [icon]="faLocationDot" class="text-altiba-green" />
+          {{ producto().ubicacion }}
+        </p>
+      }
+
+      <div
+        class="mt-auto flex items-center justify-between gap-2 border-t border-dashed border-gray-200 pt-3"
+      >
+        @if (producto().owner; as owner) {
+          <span class="flex min-w-0 items-center gap-2 text-xs text-gray-500">
+            <span
+              class="grid h-7 w-7 shrink-0 place-items-center rounded-full text-[11px] font-bold uppercase text-white"
+              [style.background-color]="categoria().color"
+            >
+              {{ owner.username[0] }}
+            </span>
+            <span class="truncate">{{ owner.username }}</span>
+          </span>
+        } @else {
+          <span></span>
+        }
+        <span
+          class="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-gray-100 text-xs text-altiba-dark transition-all duration-300 group-hover:translate-x-0.5 group-hover:bg-altiba-green group-hover:text-white"
+        >
+          <fa-icon [icon]="faArrowRight" />
+        </span>
+      </div>
+    </div>
+  </a>
+
+  <ng-content />
+</article>

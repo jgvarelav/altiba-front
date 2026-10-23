@@ -21,10 +21,11 @@ import { CATEGORIAS } from '../../../../core/models/categorias.const';
 import { blocksToText } from '../../../../core/utils/strapi-blocks';
 import { contactoHref } from '../../../../shared/utils/contacto-href';
 import { environment } from '../../../../../environments/environment';
+import { ProductoCard } from '../../components/producto-card/producto-card';
 
 @Component({
   selector: 'app-emprendimiento-detail',
-  imports: [RouterLink, FaIconComponent],
+  imports: [RouterLink, FaIconComponent, ProductoCard],
   templateUrl: './emprendimiento-detail.html',
 })
 export class EmprendimientoDetail {

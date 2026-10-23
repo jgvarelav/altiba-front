@@ -1,0 +1,199 @@
+<section class="relative overflow-hidden bg-altiba-banner">
+  <div class="relative mx-auto max-w-3xl px-4 py-14 text-center sm:px-6 lg:px-8">
+    <p class="text-sm font-semibold uppercase tracking-wide text-altiba-green">Buscar</p>
+    <h1 class="mt-2 text-3xl font-extrabold text-white sm:text-4xl">¿Qué estás buscando?</h1>
+
+    <label class="relative mx-auto mt-6 block max-w-2xl">
+      <fa-icon
+        [icon]="faMagnifyingGlass"
+        class="pointer-events-none absolute left-5 top-1/2 -translate-y-1/2 text-lg text-gray-400"
+      />
+      <input
+        #box
+        type="search"
+        autofocus
+        [value]="query()"
+        (input)="onInput(box.value)"
+        placeholder="Emprendimientos, eventos, noticias, comunidad…"
+        class="w-full rounded-full form-field py-4 pl-14 pr-12 text-base text-altiba-dark shadow-xl placeholder:text-gray-400"
+      />
+      @if (query()) {
+        <button
+          type="button"
+          (click)="buscar(''); box.focus()"
+          class="absolute right-4 top-1/2 grid h-8 w-8 -translate-y-1/2 place-items-center rounded-full text-gray-400 hover:bg-gray-100 hover:text-altiba-dark"
+          aria-label="Limpiar búsqueda"
+        >
+          <fa-icon [icon]="faXmark" />
+        </button>
+      }
+    </label>
+
+    <div class="mt-5 flex flex-wrap items-center justify-center gap-2">
+      @for (sugerencia of sugerencias; track sugerencia) {
+        <button
+          type="button"
+          (click)="buscar(sugerencia)"
+          class="rounded-full bg-white/10 px-3 py-1 text-sm text-white/85 ring-1 ring-white/15 transition-colors hover:bg-white/20"
+        >
+          {{ sugerencia }}
+        </button>
+      }
+    </div>
+  </div>
+</section>
+
+<div class="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+  @if (loading()) {
+    <p class="text-gray-500">Cargando…</p>
+  } @else if (!query().trim()) {
+    <div class="card rounded-3xl p-10 text-center">
+      <fa-icon [icon]="faMagnifyingGlass" class="text-4xl text-altiba-green/40" />
+      <p class="mt-3 text-gray-500">
+        Escribe arriba para buscar en emprendimientos, eventos, noticias y la comunidad.
+      </p>
+    </div>
+  } @else {
+    <div class="flex flex-wrap gap-2">
+      @for (f of filtros(); track f.value) {
+        <button
+          type="button"
+          (click)="filtro.set(f.value)"
+          [disabled]="f.value !== 'todo' && f.count === 0"
+          class="flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-40"
+          [class.btn-primary]="filtro() === f.value"
+          [class.card]="filtro() !== f.value"
+          [class.text-altiba-dark]="filtro() !== f.value"
+        >
+          <fa-icon [icon]="f.icon" class="text-xs" />
+          {{ f.label }}
+          <span
+            class="rounded-full px-2 text-xs"
+            [class.bg-white/25]="filtro() === f.value"
+            [class.bg-gray-100]="filtro() !== f.value"
+          >
+            {{ f.count }}
+          </span>
+        </button>
+      }
+    </div>
+
+    @if (total() === 0) {
+      <div class="card mt-8 rounded-3xl p-10 text-center">
+        <p class="text-lg font-bold text-altiba-dark">Sin resultados para “{{ query() }}”</p>
+        <p class="mt-2 text-gray-500">Prueba con otras palabras o con una de las sugerencias.</p>
+      </div>
+    }
+
+    @if (show('productos')) {
+      <section class="mt-10">
+        <h2 class="section-title flex items-center gap-2 text-lg font-bold text-altiba-dark">
+          <fa-icon [icon]="faBriefcase" class="text-altiba-green" /> Emprendimientos
+        </h2>
+        <div class="mt-5 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          @for (producto of results().productos; track producto.documentId; let i = $index) {
+            <app-producto-card [producto]="producto" [appScrollReveal]="(i % 4) * 60" />
+          }
+        </div>
+      </section>
+    }
+
+    @if (show('eventos')) {
+      <section class="mt-10">
+        <h2 class="section-title flex items-center gap-2 text-lg font-bold text-altiba-dark">
+          <fa-icon [icon]="faCalendarDays" class="text-altiba-green" /> Eventos
+        </h2>
+        <div class="mt-5 grid grid-cols-1 gap-4 md:grid-cols-2">
+          @for (evento of results().eventos; track evento.documentId) {
+            <button
+              type="button"
+              (click)="openEvento(evento)"
+              class="group card card-hover flex items-center gap-4 rounded-2xl p-3 text-left"
+            >
+              <span
+                class="grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-altiba-green/10 text-center leading-none"
+              >
+                <span class="block text-lg font-extrabold text-altiba-dark">
+                  {{ eventoDiaMes(evento.fecha).day }}
+                </span>
+                <span class="block text-[10px] font-bold tracking-wider text-altiba-green">
+                  {{ eventoDiaMes(evento.fecha).month }}
+                </span>
+              </span>
+              <span class="min-w-0">
+                <span
+                  class="block truncate font-bold text-altiba-dark transition-colors group-hover:text-altiba-green"
+                >
+                  {{ evento.titulo }}
+                </span>
+                <span class="mt-0.5 flex items-center gap-1.5 truncate text-xs text-gray-500">
+                  {{ eventoHora(evento.fecha) }}
+                  @if (evento.ubicacion) {
+                    · <fa-icon [icon]="faLocationDot" class="text-altiba-green" />
+                    {{ evento.ubicacion }}
+                  }
+                </span>
+              </span>
+            </button>
+          }
+        </div>
+      </section>
+    }
+
+    @if (show('noticias')) {
+      <section class="mt-10">
+        <h2 class="section-title flex items-center gap-2 text-lg font-bold text-altiba-dark">
+          <fa-icon [icon]="faNewspaper" class="text-altiba-green" /> Noticias
+        </h2>
+        <div class="mt-5 grid grid-cols-1 gap-4 md:grid-cols-2">
+          @for (noticia of results().noticias; track noticia.documentId) {
+            <a
+              [routerLink]="['/', 'noticias', noticia.documentId]"
+              class="group card card-hover flex items-center gap-4 rounded-2xl p-3"
+            >
+              <span class="relative h-16 w-24 shrink-0 overflow-hidden rounded-xl bg-gray-100">
+                @if (imagenUrl(noticia); as url) {
+                  <img [src]="url" [alt]="noticia.titulo" class="h-full w-full object-cover" />
+                }
+              </span>
+              <span class="min-w-0">
+                <span class="block text-xs text-gray-400">{{ noticiaFecha(noticia) }}</span>
+                <span
+                  class="line-clamp-2 font-bold leading-snug text-altiba-dark transition-colors group-hover:text-altiba-green"
+                >
+                  {{ noticia.titulo }}
+                </span>
+              </span>
+            </a>
+          }
+        </div>
+      </section>
+    }
+
+    @if (show('publicaciones')) {
+      <section class="mt-10">
+        <h2 class="section-title flex items-center gap-2 text-lg font-bold text-altiba-dark">
+          <fa-icon [icon]="faComments" class="text-altiba-green" /> Comunidad
+        </h2>
+        <div class="mt-5 grid grid-cols-1 gap-4 md:grid-cols-2">
+          @for (post of results().publicaciones; track post.documentId) {
+            <a
+              [routerLink]="['/', 'comunidad', post.documentId]"
+              class="group card card-hover flex flex-col rounded-2xl p-4"
+            >
+              <span
+                class="font-bold text-altiba-dark transition-colors group-hover:text-altiba-green"
+              >
+                {{ post.titulo }}
+              </span>
+              <span class="mt-1 line-clamp-2 text-sm text-gray-500">{{ post.contenido }}</span>
+              <span class="mt-2 text-xs text-gray-400">
+                por {{ post.owner?.username ?? 'Usuario' }}
+              </span>
+            </a>
+          }
+        </div>
+      </section>
+    }
+  }
+</div>

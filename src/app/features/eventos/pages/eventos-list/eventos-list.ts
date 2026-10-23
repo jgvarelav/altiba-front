@@ -1,7 +1,4 @@
 import { Component, computed, inject, signal } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { DatePickerModule } from 'primeng/datepicker';
-import { DatePickerMonthChangeEvent } from 'primeng/types/datepicker';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import {
   faCalendarDays,
@@ -12,15 +9,15 @@ import {
 import { EventoApi } from '../../../../core/services/evento-api';
 import { Evento } from '../../../../core/models/evento.model';
 import { environment } from '../../../../../environments/environment';
-import { diaKey, eventoDiaKey, eventoDiaMes, eventoHora, mesAnio } from '../../utils/evento-format';
+import { eventoDiaMes, eventoHora, mesAnio } from '../../utils/evento-format';
 import { openEventoDetail, openEventosDelDia } from '../../utils/evento-popup';
 import { ScrollRevealDirective } from '../../../../shared/utils/scroll-reveal.directive';
+import { EventosBoard, MesVisible } from '../../components/eventos-board/eventos-board';
 
 @Component({
   selector: 'app-eventos-list',
-  imports: [FormsModule, DatePickerModule, FaIconComponent, ScrollRevealDirective],
+  imports: [FaIconComponent, ScrollRevealDirective, EventosBoard],
   templateUrl: './eventos-list.html',
-  styleUrl: './eventos-list.css',
 })
 export class EventosList {
   private readonly eventoApi = inject(EventoApi);
@@ -30,23 +27,13 @@ export class EventosList {
   readonly loading = signal(true);
   readonly errorMessage = signal<string | null>(null);
 
-  /** Month currently displayed by the calendar (0-based month). */
-  readonly visibleMonth = signal(this.monthOf(new Date()));
-  selectedDate: Date | null = null;
+  /** Month currently displayed by the board (0-based month). */
+  readonly visibleMonth = signal<MesVisible>(this.monthOf(new Date()));
 
   readonly faCalendarDays = faCalendarDays;
   readonly faClock = faClock;
   readonly faHandshake = faHandshake;
   readonly faLocationDot = faLocationDot;
-
-  readonly eventosPorDia = computed(() => {
-    const map = new Map<string, Evento[]>();
-    for (const evento of this.eventos()) {
-      const key = eventoDiaKey(evento.fecha);
-      map.set(key, [...(map.get(key) ?? []), evento]);
-    }
-    return map;
-  });
 
   readonly eventosDelMes = computed(() => {
     const { month, year } = this.visibleMonth();
@@ -81,30 +68,12 @@ export class EventosList {
     });
   }
 
-  tieneEventos(year: number, month: number, day: number): boolean {
-    return this.eventosPorDia().has(diaKey(year, month, day));
-  }
-
-  onMonthChange(event: DatePickerMonthChangeEvent): void {
-    // PrimeNG reports a 1-based month here, unlike the 0-based date template metadata.
-    if (event.month !== undefined && event.year !== undefined) {
-      this.visibleMonth.set({ month: event.month - 1, year: event.year });
-    }
-  }
-
-  onSelectDate(date: Date): void {
-    const eventos = this.eventosPorDia().get(
-      diaKey(date.getFullYear(), date.getMonth(), date.getDate()),
-    );
-    if (eventos) {
-      openEventosDelDia(eventos, this.apiUrl);
-    }
+  openDia(eventos: Evento[]): void {
+    openEventosDelDia(eventos, this.apiUrl);
   }
 
   irAEvento(evento: Evento): void {
-    const date = new Date(evento.fecha);
-    this.selectedDate = date;
-    this.visibleMonth.set(this.monthOf(date));
+    this.visibleMonth.set(this.monthOf(new Date(evento.fecha)));
   }
 
   diaMes(fecha: string) {
@@ -123,7 +92,7 @@ export class EventosList {
     openEventoDetail(evento, this.apiUrl);
   }
 
-  private monthOf(date: Date): { month: number; year: number } {
+  private monthOf(date: Date): MesVisible {
     return { month: date.getMonth(), year: date.getFullYear() };
   }
 }

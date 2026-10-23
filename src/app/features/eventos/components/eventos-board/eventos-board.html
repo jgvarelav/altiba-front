@@ -1,0 +1,86 @@
+<div
+  class="board rounded-3xl bg-white p-3 shadow-xl shadow-altiba-dark/10 ring-1 ring-gray-100 sm:p-5"
+>
+  <div class="flex flex-wrap items-center justify-between gap-3 px-1 pb-4">
+    <h2 class="text-2xl font-extrabold capitalize text-altiba-dark sm:text-3xl">{{ titulo() }}</h2>
+    <div class="flex items-center gap-2">
+      <button
+        type="button"
+        (click)="goToday()"
+        class="rounded-full border border-gray-200 px-4 py-2 text-sm font-semibold text-altiba-dark transition-colors hover:border-altiba-green hover:text-altiba-green"
+      >
+        Hoy
+      </button>
+      <button type="button" (click)="prevMonth()" class="board-nav" aria-label="Mes anterior">
+        <fa-icon [icon]="faChevronLeft" />
+      </button>
+      <button type="button" (click)="nextMonth()" class="board-nav" aria-label="Mes siguiente">
+        <fa-icon [icon]="faChevronRight" />
+      </button>
+    </div>
+  </div>
+
+  <div class="overflow-hidden rounded-2xl border border-gray-200">
+    <div class="grid grid-cols-7 bg-altiba-dark text-center text-xs font-semibold text-white">
+      @for (dia of dias; track dia) {
+        <div class="px-1 py-2">
+          <span class="hidden md:inline">{{ dia }}</span>
+          <span class="md:hidden">{{ dia.slice(0, 3) }}</span>
+        </div>
+      }
+    </div>
+
+    @for (key of [mesKey()]; track key) {
+      <div class="grid grid-cols-7 gap-px bg-gray-200">
+        @for (semana of semanas(); track $index; let w = $index) {
+          @for (cell of semana; track cell.key; let d = $index) {
+            <div
+              class="board-cell"
+              [class.is-out]="!cell.inMonth"
+              [class.is-today]="cell.isToday"
+              [class.has-eventos]="cell.eventos.length > 0"
+              (click)="openDia(cell)"
+            >
+              <span class="board-day">{{ cell.day }}</span>
+
+              <!-- sm+: sticky notes; extra events collapse into a chip that opens the day. -->
+              <div class="mt-1 hidden flex-col items-center gap-1.5 sm:flex">
+                @for (evento of cell.eventos.slice(0, maxNotes); track evento.documentId) {
+                  <button
+                    type="button"
+                    class="sticky-note"
+                    [style.--note-bg]="noteColor(evento)"
+                    [style.--note-tilt]="noteTilt(evento)"
+                    [style.animation-delay]="(w * 7 + d) * 25 + 'ms'"
+                    [title]="evento.titulo"
+                    (click)="openEvento(evento, $event)"
+                  >
+                    <span class="line-clamp-2">{{ evento.titulo }}</span>
+                    <span class="mt-0.5 block text-[10px] font-medium opacity-70">
+                      {{ hora(evento.fecha) }}
+                    </span>
+                  </button>
+                }
+                @if (cell.eventos.length > maxNotes) {
+                  <span class="more-chip">+{{ cell.eventos.length - maxNotes }} más</span>
+                }
+              </div>
+
+              <!-- Mobile: one dot per event (max 3); tapping the day opens them. -->
+              @if (cell.eventos.length > 0) {
+                <div class="mt-1 flex justify-center gap-0.5 sm:hidden">
+                  @for (evento of cell.eventos.slice(0, 3); track evento.documentId) {
+                    <span
+                      class="h-1.5 w-1.5 rounded-full"
+                      [style.background]="noteColor(evento)"
+                    ></span>
+                  }
+                </div>
+              }
+            </div>
+          }
+        }
+      </div>
+    }
+  </div>
+</div>

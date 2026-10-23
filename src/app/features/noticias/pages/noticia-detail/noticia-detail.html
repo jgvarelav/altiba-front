@@ -14,10 +14,16 @@
     <article class="mt-4">
       @if (imagenUrl(post); as imageUrl) {
         <div class="relative h-64 w-full overflow-hidden rounded-2xl bg-gray-100 sm:h-80">
-          <img [src]="imageUrl" [alt]="post.titulo" class="absolute inset-0 h-full w-full object-cover" />
+          <img
+            [src]="imageUrl"
+            [alt]="post.titulo"
+            class="absolute inset-0 h-full w-full object-cover"
+          />
         </div>
       } @else {
-        <div class="grid h-64 w-full place-items-center rounded-2xl bg-gray-100 text-4xl text-gray-300 sm:h-80">
+        <div
+          class="grid h-64 w-full place-items-center rounded-2xl bg-gray-100 text-4xl text-gray-300 sm:h-80"
+        >
           <fa-icon [icon]="faNewspaper" />
         </div>
       }

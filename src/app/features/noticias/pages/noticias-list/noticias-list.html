@@ -1,8 +1,12 @@
 <section class="relative overflow-hidden bg-altiba-banner">
-  <div class="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-altiba-green/10 blur-3xl"></div>
+  <div
+    class="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-altiba-green/10 blur-3xl"
+  ></div>
 
   <div class="relative mx-auto max-w-4xl px-4 py-16 text-center sm:px-6 lg:px-8">
-    <p class="flex items-center justify-center gap-2 text-sm font-semibold uppercase tracking-wide text-altiba-green">
+    <p
+      class="flex items-center justify-center gap-2 text-sm font-semibold uppercase tracking-wide text-altiba-green"
+    >
       <fa-icon [icon]="faNewspaper" /> Noticias
     </p>
     <h1 class="mt-2 text-3xl font-extrabold text-white sm:text-4xl">Actualidad Altiba</h1>
@@ -23,31 +27,86 @@
       <p class="mt-3 text-gray-500">Todavía no hay noticias publicadas.</p>
     </div>
   } @else {
-    <div class="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+    <!-- The newest story gets a large "featured" tile (2×2 on desktop); the rest fill the grid. -->
+    <div class="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
       @for (noticia of noticias(); track noticia.documentId; let i = $index) {
+        @let destacada = i === 0;
         <a
           [routerLink]="['/', 'noticias', noticia.documentId]"
           [appScrollReveal]="(i % 3) * 80"
-          class="group flex flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-altiba-green/30 hover:shadow-lg"
+          class="group card card-hover flex flex-col overflow-hidden rounded-3xl"
+          [class.sm:col-span-2]="destacada"
+          [class.lg:row-span-2]="destacada"
         >
-          <div class="relative grid h-40 place-items-center overflow-hidden bg-gray-100 text-3xl text-gray-300">
+          <div
+            class="relative overflow-hidden bg-altiba-dark"
+            [class.h-52]="!destacada"
+            [class.h-64]="destacada"
+            [class.lg:h-auto]="destacada"
+            [class.lg:flex-1]="destacada"
+          >
             @if (imagenUrl(noticia); as imageUrl) {
               <img
                 [src]="imageUrl"
                 [alt]="noticia.titulo"
-                class="absolute inset-0 h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                loading="lazy"
+                class="absolute inset-0 h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-110"
               />
             } @else {
-              <fa-icon [icon]="faNewspaper" />
+              <div class="absolute inset-0 grid place-items-center text-5xl text-white/30">
+                <fa-icon [icon]="faNewspaper" />
+              </div>
+            }
+            <div
+              class="pointer-events-none absolute inset-0 bg-linear-to-t from-black/75 via-black/10 to-transparent"
+            ></div>
+
+            <div
+              class="absolute left-4 top-4 grid h-14 w-14 place-items-center rounded-2xl bg-white/90 text-center leading-none shadow-lg backdrop-blur-sm"
+            >
+              <span class="block text-xl font-extrabold text-altiba-dark">{{
+                diaMes(noticia.fecha).day
+              }}</span>
+              <span class="block text-[10px] font-bold tracking-wider text-altiba-green">
+                {{ diaMes(noticia.fecha).month }}
+              </span>
+            </div>
+            @if (destacada) {
+              <span
+                class="absolute right-4 top-4 rounded-full bg-altiba-gold px-3 py-1 text-xs font-bold uppercase tracking-wide text-white shadow-md"
+              >
+                Lo más reciente
+              </span>
+              <!-- Featured tile: headline sits over the photo. -->
+              <div class="absolute inset-x-0 bottom-0 p-5 text-white sm:p-6">
+                <p class="text-xl font-extrabold leading-tight sm:text-2xl">{{ noticia.titulo }}</p>
+                <p class="mt-2 line-clamp-2 max-w-2xl text-sm text-white/85">
+                  {{ noticia.descripcion }}
+                </p>
+              </div>
             }
           </div>
-          <div class="flex flex-1 flex-col p-4">
-            <p class="text-xs font-medium text-gray-400">{{ fechaLarga(noticia.fecha) }}</p>
-            <p class="mt-1 font-bold text-altiba-dark transition-colors group-hover:text-altiba-green">
-              {{ noticia.titulo }}
-            </p>
-            <p class="mt-2 flex-1 text-sm text-gray-500">{{ snippet(noticia.descripcion) }}</p>
-          </div>
+
+          @if (!destacada) {
+            <div class="flex flex-1 flex-col p-5">
+              <p class="text-xs font-medium text-gray-400">{{ fechaLarga(noticia.fecha) }}</p>
+              <p
+                class="mt-1 line-clamp-2 font-bold leading-snug text-altiba-dark transition-colors group-hover:text-altiba-green"
+              >
+                {{ noticia.titulo }}
+              </p>
+              <p class="mt-2 line-clamp-3 flex-1 text-sm text-gray-500">
+                {{ noticia.descripcion }}
+              </p>
+              <span class="mt-4 flex items-center gap-2 text-sm font-semibold text-altiba-green">
+                Leer más
+                <fa-icon
+                  [icon]="faArrowRight"
+                  class="transition-transform duration-300 group-hover:translate-x-1"
+                />
+              </span>
+            </div>
+          }
         </a>
       }
     </div>

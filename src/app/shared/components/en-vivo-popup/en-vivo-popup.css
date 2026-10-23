@@ -1,0 +1,71 @@
+/* Pulsing white "recording" dot used in the badge and the reopen pill. */
+.envivo-dot {
+  position: relative;
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 9999px;
+  background: white;
+}
+
+.envivo-dot::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: inherit;
+  animation: envivo-ping 1.4s ease-out infinite;
+}
+
+/* Broadcast icon with expanding rings when there's no embedded player. */
+.envivo-tower {
+  box-shadow: 0 0 0 0 rgb(220 38 38 / 0.5);
+  animation: envivo-rings 1.8s ease-out infinite;
+}
+
+.envivo-backdrop {
+  animation: envivo-fade 200ms ease-out;
+}
+
+.envivo-dialog {
+  animation: envivo-pop 350ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.envivo-pill {
+  animation: envivo-pop 350ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes envivo-ping {
+  to {
+    transform: scale(2.6);
+    opacity: 0;
+  }
+}
+
+@keyframes envivo-rings {
+  to {
+    box-shadow: 0 0 0 22px rgb(220 38 38 / 0);
+  }
+}
+
+@keyframes envivo-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes envivo-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.85) translateY(12px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .envivo-dot::after,
+  .envivo-tower,
+  .envivo-backdrop,
+  .envivo-dialog,
+  .envivo-pill {
+    animation: none;
+  }
+}

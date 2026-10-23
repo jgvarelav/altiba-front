@@ -24,7 +24,7 @@
           type="password"
           formControlName="password"
           autocomplete="new-password"
-          class="w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-altiba-dark focus:border-altiba-green focus:outline-none"
+          class="w-full rounded-lg form-field px-3 py-2 text-sm text-altiba-dark"
         />
         @if (form.controls.password.touched && form.controls.password.invalid) {
           <p class="mt-1 text-xs text-red-600">Debe tener al menos 6 caracteres.</p>
@@ -40,7 +40,7 @@
           type="password"
           formControlName="confirmacion"
           autocomplete="new-password"
-          class="w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-altiba-dark focus:border-altiba-green focus:outline-none"
+          class="w-full rounded-lg form-field px-3 py-2 text-sm text-altiba-dark"
         />
         @if (form.controls.confirmacion.touched && form.hasError('mismatch')) {
           <p class="mt-1 text-xs text-red-600">Las contraseñas no coinciden.</p>
@@ -57,7 +57,7 @@
       <button
         type="submit"
         [disabled]="loading()"
-        class="mt-2 rounded-full bg-altiba-green px-5 py-2.5 text-sm font-semibold text-white hover:bg-altiba-green-dark disabled:opacity-60"
+        class="mt-2 rounded-full btn-primary px-5 py-2.5 text-sm font-semibold text-white"
       >
         {{ loading() ? 'Guardando...' : 'Guardar contraseña' }}
       </button>

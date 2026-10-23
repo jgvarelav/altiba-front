@@ -1,5 +1,7 @@
 <section class="relative overflow-hidden bg-altiba-banner">
-  <div class="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-altiba-green/10 blur-3xl"></div>
+  <div
+    class="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-altiba-green/10 blur-3xl"
+  ></div>
 
   <div class="relative mx-auto max-w-4xl px-4 py-16 text-center sm:px-6 lg:px-8">
     <p class="text-sm font-semibold uppercase tracking-wide text-altiba-green">Contacto</p>
@@ -16,7 +18,7 @@
       <a
         [href]="dato.href"
         [appScrollReveal]="i * 90"
-        class="group flex flex-col items-center gap-3 rounded-2xl border border-gray-100 bg-white p-6 text-center shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-altiba-green/30 hover:shadow-lg"
+        class="group flex flex-col items-center gap-3 rounded-2xl card card-hover p-6 text-center"
       >
         <span
           class="grid h-14 w-14 place-items-center rounded-full bg-altiba-green/10 text-xl text-altiba-green transition-transform duration-200 group-hover:scale-110"
@@ -29,7 +31,7 @@
     }
   </div>
 
-  <div [appScrollReveal]="0" class="mt-10 rounded-2xl border border-gray-100 bg-white p-6 text-center shadow-sm sm:p-8">
+  <div [appScrollReveal]="0" class="mt-10 rounded-2xl card p-6 text-center sm:p-8">
     <p class="font-bold text-altiba-dark">Síguenos en redes sociales</p>
     <div class="mt-4 flex items-center justify-center gap-3">
       @for (red of redes; track red.label) {

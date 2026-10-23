@@ -76,6 +76,17 @@
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true
+            },
+            "tunnel": {
+              "optimization": true,
+              "extractLicenses": false,
+              "sourceMap": false,
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.tunnel.ts"
+                }
+              ]
             }
           },
           "defaultConfiguration": "production"
@@ -83,7 +94,12 @@
         "serve": {
           "builder": "@angular/build:dev-server",
           "options": {
-            "allowedHosts": [".trycloudflare.com", ".loca.lt"]
+            "allowedHosts": [
+              ".trycloudflare.com",
+              ".loca.lt",
+              ".lhr.life",
+              ".localhost.run"
+            ]
           },
           "configurations": {
             "production": {
@@ -91,6 +107,12 @@
             },
             "development": {
               "buildTarget": "altiba-front:build:development"
+            },
+            "tunnel": {
+              "buildTarget": "altiba-front:build:tunnel",
+              "proxyConfig": "proxy.tunnel.json",
+              "prebundle": false,
+              "hmr": false
             }
           },
           "defaultConfiguration": "development"

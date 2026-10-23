@@ -4,6 +4,7 @@ import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { faEnvelope, faPhone, faLocationDot } from '@fortawesome/free-solid-svg-icons';
 import { faInstagram, faFacebookF, faYoutube, faTiktok } from '@fortawesome/free-brands-svg-icons';
 import { ScrollRevealDirective } from '../../../../shared/utils/scroll-reveal.directive';
+import { SOPORTE } from '../../../../core/models/soporte.const';
 
 interface DatoContacto {
   icon: IconDefinition;
@@ -32,14 +33,14 @@ export class Contacto {
     {
       icon: faEnvelope,
       label: 'Correo',
-      value: 'contacto@altibaconectalab.com',
-      href: 'mailto:contacto@altibaconectalab.com',
+      value: SOPORTE.email,
+      href: `mailto:${SOPORTE.email}`,
     },
     {
       icon: faPhone,
       label: 'Teléfono / WhatsApp',
-      value: '301 699 1037',
-      href: 'tel:+573016991037',
+      value: SOPORTE.telefono,
+      href: `tel:+${SOPORTE.telefonoIntl}`,
     },
     {
       icon: faLocationDot,

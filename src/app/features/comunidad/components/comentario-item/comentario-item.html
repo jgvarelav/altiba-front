@@ -44,12 +44,12 @@
             [(ngModel)]="replyText"
             placeholder="Escribe tu respuesta..."
             (keydown.enter)="submitReply()"
-            class="w-full rounded-full border border-gray-200 bg-white px-4 py-2 text-sm text-altiba-dark focus:border-altiba-green focus:outline-none"
+            class="w-full rounded-full form-field px-4 py-2 text-sm text-altiba-dark"
           />
           <button
             type="button"
             (click)="submitReply()"
-            class="w-fit rounded-full bg-altiba-green px-4 py-2 text-xs font-semibold text-white transition-transform hover:bg-altiba-green-dark active:scale-95"
+            class="w-fit rounded-full btn-primary px-4 py-2 text-xs font-semibold text-white active:scale-95"
           >
             Responder
           </button>

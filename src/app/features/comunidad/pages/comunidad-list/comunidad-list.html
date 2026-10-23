@@ -1,18 +1,21 @@
 <section class="bg-altiba-banner">
-  <div class="mx-auto flex max-w-7xl flex-col items-start gap-4 px-4 py-12 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8">
+  <div
+    class="mx-auto flex max-w-7xl flex-col items-start gap-4 px-4 py-12 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8"
+  >
     <div>
       <p class="flex items-center gap-2 text-sm font-semibold text-altiba-green">
         <fa-icon [icon]="faUserGroup" /> Foro de la comunidad
       </p>
       <h1 class="mt-2 text-3xl font-extrabold text-white">Comparte, pregunta y conecta</h1>
       <p class="mt-2 max-w-xl text-white/70">
-        Un espacio para conversar sobre emprendimiento rural, resolver dudas entre pares y celebrar logros.
+        Un espacio para conversar sobre emprendimiento rural, resolver dudas entre pares y celebrar
+        logros.
       </p>
     </div>
     @if (currentUser()) {
       <a
         [routerLink]="['/', 'comunidad', 'crear']"
-        class="flex shrink-0 items-center gap-2 rounded-full bg-altiba-green px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-altiba-green/20 transition-transform hover:bg-altiba-green-dark hover:-translate-y-0.5 active:scale-95"
+        class="flex shrink-0 items-center gap-2 rounded-full btn-primary px-5 py-2.5 text-sm font-semibold text-white active:scale-95"
       >
         <fa-icon [icon]="faPlus" /> Nueva publicación
       </a>
@@ -33,29 +36,58 @@
   } @else {
     <div class="grid grid-cols-1 gap-5 lg:grid-cols-2">
       @for (post of publicaciones(); track post.documentId; let i = $index) {
+        @let color = avatarColor(post.owner?.username);
         <a
           [routerLink]="['/', 'comunidad', post.documentId]"
           [appScrollReveal]="(i % 2) * 80"
-          class="group flex flex-col rounded-2xl border border-gray-100 bg-white p-5 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-altiba-green/30 hover:shadow-lg"
+          class="group card card-hover relative flex flex-col overflow-hidden rounded-3xl p-6"
         >
+          <!-- Author-colored accent bar and a faded quote mark for a "conversation" feel. -->
+          <span class="absolute inset-y-0 left-0 w-1.5" [style.background-color]="color"></span>
+          <fa-icon
+            [icon]="faQuoteRight"
+            class="pointer-events-none absolute right-5 top-4 text-5xl opacity-10 transition-transform duration-300 group-hover:-rotate-6 group-hover:scale-110"
+            [style.color]="color"
+          />
+
           <div class="flex items-center gap-3">
-            <span class="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-altiba-green/90 text-sm font-bold text-white">
-              {{ (post.owner?.username?.[0] ?? '?') | uppercase }}
+            <span
+              class="grid h-11 w-11 shrink-0 place-items-center rounded-full text-sm font-bold text-white shadow-md ring-4"
+              [style.background-color]="color"
+              [style.--tw-ring-color]="color + '26'"
+            >
+              {{ post.owner?.username?.[0] ?? '?' | uppercase }}
             </span>
             <div class="min-w-0">
-              <p class="truncate text-sm font-semibold text-altiba-dark">{{ post.owner?.username ?? 'Usuario' }}</p>
+              <p class="truncate text-sm font-semibold text-altiba-dark">
+                {{ post.owner?.username ?? 'Usuario' }}
+              </p>
               <p class="text-xs text-gray-400">{{ post.createdAt | date: 'd MMM yyyy' }}</p>
             </div>
           </div>
 
-          <h2 class="mt-3 text-lg font-bold text-altiba-dark transition-colors group-hover:text-altiba-green">
+          <h2
+            class="mt-4 text-lg font-bold leading-snug text-altiba-dark transition-colors group-hover:text-altiba-green"
+          >
             {{ post.titulo }}
           </h2>
-          <p class="mt-1 flex-1 text-sm text-gray-500">{{ snippet(post.contenido) }}</p>
+          <p class="mt-1.5 line-clamp-3 flex-1 text-sm text-gray-500">{{ post.contenido }}</p>
 
-          <div class="mt-4 flex items-center gap-1.5 text-xs font-medium text-gray-400">
-            <fa-icon [icon]="faComments" />
-            {{ post.comentarios?.length ?? 0 }} comentarios
+          <div class="mt-5 flex items-center justify-between gap-3">
+            <span
+              class="flex items-center gap-1.5 rounded-full bg-gray-100 px-3 py-1 text-xs font-semibold text-gray-600"
+            >
+              <fa-icon [icon]="faComments" class="text-altiba-green" />
+              {{ post.comentarios?.length ?? 0 }}
+              {{ (post.comentarios?.length ?? 0) === 1 ? 'comentario' : 'comentarios' }}
+            </span>
+            <span class="flex items-center gap-2 text-sm font-semibold text-altiba-green">
+              Participar
+              <fa-icon
+                [icon]="faArrowRight"
+                class="transition-transform duration-300 group-hover:translate-x-1"
+              />
+            </span>
           </div>
         </a>
       }

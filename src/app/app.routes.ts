@@ -36,8 +36,7 @@ export const routes: Routes = [
       },
       {
         path: 'perfil',
-        loadChildren: () =>
-          import('./features/perfil/perfil.routes').then((m) => m.PERFIL_ROUTES),
+        loadChildren: () => import('./features/perfil/perfil.routes').then((m) => m.PERFIL_ROUTES),
       },
       {
         path: 'sobre-nosotros',
@@ -45,6 +44,10 @@ export const routes: Routes = [
           import('./features/sobre-nosotros/sobre-nosotros.routes').then(
             (m) => m.SOBRE_NOSOTROS_ROUTES,
           ),
+      },
+      {
+        path: 'buscar',
+        loadChildren: () => import('./features/buscar/buscar.routes').then((m) => m.BUSCAR_ROUTES),
       },
       {
         path: 'contacto',

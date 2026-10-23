@@ -1,0 +1,88 @@
+@if (enVivo(); as vivo) {
+  @if (open()) {
+    <div
+      class="envivo-backdrop fixed inset-0 z-[60] grid place-items-center bg-altiba-dark/60 p-4 backdrop-blur-sm"
+      (click)="close()"
+    >
+      <div
+        class="envivo-dialog relative w-full max-w-lg overflow-hidden rounded-3xl bg-white shadow-2xl"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="envivo-titulo"
+        (click)="$event.stopPropagation()"
+      >
+        <div class="relative bg-altiba-banner px-6 pb-6 pt-5 text-white">
+          <button
+            type="button"
+            (click)="close()"
+            class="absolute right-4 top-4 grid h-9 w-9 place-items-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20"
+            aria-label="Cerrar"
+          >
+            <fa-icon [icon]="faXmark" />
+          </button>
+
+          <span
+            class="inline-flex items-center gap-2 rounded-full bg-red-600 px-3 py-1 text-xs font-extrabold uppercase tracking-widest shadow-lg shadow-red-600/40"
+          >
+            <span class="envivo-dot"></span> En vivo
+          </span>
+          <h2 id="envivo-titulo" class="mt-3 pr-10 text-2xl font-extrabold leading-tight">
+            {{ vivo.titulo }}
+          </h2>
+          @if (vivo.descripcion) {
+            <p class="mt-2 text-sm text-white/80">{{ vivo.descripcion }}</p>
+          }
+        </div>
+
+        @if (embedUrl(); as src) {
+          <div class="aspect-video bg-black">
+            <iframe
+              [src]="src"
+              title="Transmisión en vivo"
+              class="h-full w-full"
+              allow="autoplay; encrypted-media; picture-in-picture"
+              allowfullscreen
+            ></iframe>
+          </div>
+        } @else {
+          <div class="grid place-items-center bg-altiba-dark/5 py-8">
+            <span
+              class="envivo-tower grid h-20 w-20 place-items-center rounded-full bg-red-600 text-3xl text-white"
+            >
+              <fa-icon [icon]="faTowerBroadcast" />
+            </span>
+          </div>
+        }
+
+        <div class="flex flex-col gap-3 p-5 sm:flex-row sm:justify-end">
+          <button
+            type="button"
+            (click)="close()"
+            class="rounded-full px-5 py-2.5 text-sm font-semibold text-gray-500 hover:bg-gray-100"
+          >
+            Ahora no
+          </button>
+          <a
+            [href]="vivo.url"
+            target="_blank"
+            rel="noopener"
+            (click)="close()"
+            class="flex items-center justify-center gap-2 rounded-full bg-red-600 px-5 py-2.5 text-sm font-bold text-white shadow-lg shadow-red-600/30 transition hover:-translate-y-0.5 hover:bg-red-700"
+          >
+            {{ vivo.textoBoton || 'Ver transmisión' }}
+            <fa-icon [icon]="faArrowUpRightFromSquare" class="text-xs" />
+          </a>
+        </div>
+      </div>
+    </div>
+  } @else {
+    <!-- Reopen pill while the broadcast is still on. -->
+    <button
+      type="button"
+      (click)="reopen()"
+      class="envivo-pill fixed bottom-6 left-6 z-30 flex items-center gap-2 rounded-full bg-red-600 px-4 py-2.5 text-sm font-bold text-white shadow-xl shadow-red-600/30 transition hover:-translate-y-0.5 hover:bg-red-700"
+    >
+      <span class="envivo-dot"></span> En vivo
+    </button>
+  }
+}

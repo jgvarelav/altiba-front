@@ -1,5 +1,5 @@
 <header
-  class="fixed inset-x-0 top-0 z-40 h-16 border-b bg-white transition-shadow duration-300 lg:h-20"
+  class="fixed inset-x-0 top-0 z-40 h-16 border-b transition-shadow duration-300 before:absolute before:inset-0 before:-z-10 before:bg-white/80 before:backdrop-blur-md lg:h-20"
   [class.border-gray-100]="!scrolled()"
   [class.shadow-sm]="!scrolled()"
   [class.border-transparent]="scrolled()"
@@ -16,7 +16,7 @@
     </button>
 
     <a [routerLink]="['/']" class="flex shrink-0 items-center">
-      <img src="altiba_logo_completo.png" alt="Altiba Conecta Lab" class="h-12 w-auto lg:h-14" />
+      <img src="Altiba.png" alt="Altiba Conecta Lab" class="h-12 w-auto lg:h-14" />
     </a>
 
     <nav class="hidden min-w-0 flex-1 items-center gap-0.5 overflow-x-auto lg:flex">
@@ -35,39 +35,145 @@
     </nav>
 
     <div class="ml-auto flex shrink-0 items-center gap-1 sm:gap-2">
-      <label class="relative hidden 2xl:block">
-        <fa-icon
-          [icon]="faMagnifyingGlass"
-          class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
-        />
-        <input
-          type="search"
-          placeholder="Buscar emprendimientos, productos, cursos..."
-          class="w-56 rounded-full border border-gray-200 bg-gray-50 py-2 pl-9 pr-3 text-sm text-altiba-dark placeholder:text-gray-400 focus:border-altiba-green focus:outline-none"
-        />
-      </label>
-      <button
-        type="button"
+      <!-- Search: live suggestions while typing; Enter opens the full results page. -->
+      <div class="relative hidden 2xl:block" (appClickOutside)="searchOpen.set(false)">
+        <form (submit)="submitSearch($event)" role="search">
+          <fa-icon
+            [icon]="faMagnifyingGlass"
+            class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+          />
+          <input
+            type="search"
+            [value]="searchQuery()"
+            (input)="onSearchInput($any($event.target).value)"
+            (focus)="onSearchFocus()"
+            (keydown.escape)="searchOpen.set(false)"
+            placeholder="Buscar emprendimientos, eventos..."
+            aria-label="Buscar en el sitio"
+            class="w-60 rounded-full form-field py-2 pl-9 pr-3 text-sm text-altiba-dark placeholder:text-gray-400"
+          />
+        </form>
+
+        @if (searchOpen() && searchQuery().trim()) {
+          <div class="absolute right-0 z-50 mt-2 w-96 overflow-hidden rounded-2xl card shadow-xl">
+            @if (searchHits().length === 0) {
+              <p class="px-4 py-5 text-center text-sm text-gray-500">
+                @if (searchIndexLoading()) {
+                  Buscando…
+                } @else {
+                  Sin resultados para “{{ searchQuery() }}”
+                }
+              </p>
+            } @else {
+              <ul class="max-h-96 overflow-y-auto py-2">
+                @for (hit of searchHits(); track hit.key) {
+                  <li>
+                    <button
+                      type="button"
+                      (click)="openHit(hit)"
+                      class="flex w-full items-center gap-3 px-4 py-2 text-left hover:bg-altiba-green/5"
+                    >
+                      <span
+                        class="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-altiba-green/10 text-sm text-altiba-green"
+                      >
+                        <fa-icon [icon]="hit.icon" />
+                      </span>
+                      <span class="min-w-0">
+                        <span class="block truncate text-sm font-semibold text-altiba-dark">
+                          {{ hit.title }}
+                        </span>
+                        <span class="block truncate text-xs text-gray-400">{{ hit.subtitle }}</span>
+                      </span>
+                    </button>
+                  </li>
+                }
+              </ul>
+            }
+            <button
+              type="button"
+              (click)="goToSearchPage()"
+              class="flex w-full items-center justify-center gap-2 border-t border-gray-100 px-4 py-3 text-sm font-semibold text-altiba-green hover:bg-altiba-green/5"
+            >
+              Ver todos los resultados
+              <fa-icon [icon]="faArrowRight" class="text-xs" />
+            </button>
+          </div>
+        }
+      </div>
+      <a
+        [routerLink]="['/', 'buscar']"
         class="grid h-10 w-10 place-items-center rounded-full text-altiba-dark hover:bg-gray-100 2xl:hidden"
         aria-label="Buscar"
       >
         <fa-icon [icon]="faMagnifyingGlass" />
-      </button>
+      </a>
 
-      <button
-        type="button"
-        class="grid h-10 w-10 place-items-center rounded-full text-altiba-dark hover:bg-gray-100"
-        aria-label="Notificaciones"
-      >
-        <fa-icon [icon]="faBell" />
-      </button>
-      <button
-        type="button"
-        class="hidden h-10 w-10 place-items-center rounded-full text-altiba-dark hover:bg-gray-100 sm:grid"
-        aria-label="Mensajes"
-      >
-        <fa-icon [icon]="faEnvelope" />
-      </button>
+      <!-- Soporte: contact the site administrator. -->
+      <div class="relative" (appClickOutside)="supportOpen.set(false)">
+        <button
+          type="button"
+          (click)="supportOpen.set(!supportOpen())"
+          class="grid h-10 w-10 place-items-center rounded-full text-altiba-dark hover:bg-gray-100"
+          [class.bg-altiba-green/10]="supportOpen()"
+          [class.text-altiba-green]="supportOpen()"
+          aria-label="Soporte"
+          title="Soporte"
+        >
+          <fa-icon [icon]="faHeadset" />
+        </button>
+
+        @if (supportOpen()) {
+          <div class="absolute right-0 z-50 mt-2 w-72 overflow-hidden rounded-2xl card shadow-xl">
+            <div class="bg-altiba-banner px-4 py-4 text-white">
+              <p class="flex items-center gap-2 font-bold">
+                <fa-icon [icon]="faHeadset" class="text-altiba-green" /> Soporte
+              </p>
+              <p class="mt-1 text-xs text-white/75">
+                ¿Tienes un problema o una duda? Escríbele al administrador.
+              </p>
+            </div>
+            <div class="flex flex-col gap-1 p-2">
+              <a
+                [href]="supportWhatsappHref()"
+                target="_blank"
+                rel="noopener"
+                (click)="supportOpen.set(false)"
+                class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-altiba-dark hover:bg-altiba-green/5"
+              >
+                <span class="grid h-9 w-9 place-items-center rounded-full bg-[#25d366] text-white">
+                  <fa-icon [icon]="faWhatsapp" />
+                </span>
+                <span>
+                  <span class="block font-semibold">WhatsApp</span>
+                  <span class="block text-xs text-gray-400">{{ soporte.telefono }}</span>
+                </span>
+              </a>
+              <a
+                [href]="supportMailHref"
+                (click)="supportOpen.set(false)"
+                class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-altiba-dark hover:bg-altiba-green/5"
+              >
+                <span
+                  class="grid h-9 w-9 place-items-center rounded-full bg-altiba-dark text-white"
+                >
+                  <fa-icon [icon]="faEnvelope" />
+                </span>
+                <span class="min-w-0">
+                  <span class="block font-semibold">Correo</span>
+                  <span class="block truncate text-xs text-gray-400">{{ soporte.email }}</span>
+                </span>
+              </a>
+              <a
+                [routerLink]="['/', 'contacto']"
+                (click)="supportOpen.set(false)"
+                class="mt-1 border-t border-gray-100 px-3 pb-1 pt-2.5 text-center text-xs font-semibold text-altiba-green hover:underline"
+              >
+                Ver todos los canales de contacto
+              </a>
+            </div>
+          </div>
+        }
+      </div>
 
       @if (currentUser(); as user) {
         <div class="relative" (appClickOutside)="closeProfileMenu()">
@@ -76,15 +182,19 @@
             (click)="toggleProfileMenu()"
             class="flex items-center gap-2 rounded-full py-1 pl-1 pr-2 hover:bg-gray-100"
           >
-            <span class="grid h-8 w-8 place-items-center rounded-full bg-altiba-green text-sm font-bold text-white">
+            <span
+              class="grid h-8 w-8 place-items-center rounded-full bg-altiba-green text-sm font-bold text-white"
+            >
               {{ user.username[0] }}
             </span>
-            <span class="hidden text-sm font-medium text-altiba-dark 2xl:block">{{ user.username }}</span>
+            <span class="hidden text-sm font-medium text-altiba-dark 2xl:block">{{
+              user.username
+            }}</span>
             <fa-icon [icon]="faChevronDown" class="hidden text-xs text-altiba-dark/60 2xl:block" />
           </button>
 
           @if (isProfileMenuOpen()) {
-            <div class="absolute right-0 z-50 mt-2 w-52 rounded-xl border border-gray-100 bg-white py-2 shadow-lg">
+            <div class="absolute right-0 z-50 mt-2 w-52 rounded-xl card py-2 shadow-lg">
               <a
                 [routerLink]="['/', 'perfil']"
                 (click)="closeProfileMenu()"
@@ -112,7 +222,7 @@
           </a>
           <a
             [routerLink]="['/', 'registro']"
-            class="rounded-full bg-altiba-green px-3 py-2 text-sm font-semibold text-white hover:bg-altiba-green-dark"
+            class="rounded-full btn-primary px-3 py-2 text-sm font-semibold text-white"
           >
             Registrarme
           </a>
